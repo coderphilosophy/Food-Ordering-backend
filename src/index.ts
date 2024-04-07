@@ -2,9 +2,10 @@ import express, {Request, Response} from "express"
 import cors from "cors"
 import "dotenv/config"
 import mongoose from "mongoose"
-import MyUserRoute from "./routes/MyUserRoute"
+import myUserRoute from "./routes/MyUserRoute"
 import { v2 as cloudinary } from "cloudinary"
-import MyRestaurantRoute from "./routes/MyRestaurantRoute"
+import myRestaurantRoute from "./routes/MyRestaurantRoute"
+import restaurantRoute from "./routes/RestaurantRoutes"
 
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
@@ -25,8 +26,9 @@ app.get("/health", async (req: Request, res: Response) => {
     res.send({ message: "Health OK"})
 })
 
-app.use("/api/my/user", MyUserRoute)
-app.use("/api/my/restaurant", MyRestaurantRoute)
+app.use("/api/my/user", myUserRoute)
+app.use("/api/my/restaurant", myRestaurantRoute)
+app.use("/api/restaurant", restaurantRoute)
 
 app.listen(7000, () => {
     console.log("server started on localhost:7000")

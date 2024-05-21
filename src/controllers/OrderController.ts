@@ -22,6 +22,21 @@ type CheckoutSessionRequest = {
     restaurantId: string
 }
 
+const getMyOrders = async (req: Request, res: Response) => {
+    try {
+        const orders = await Order.find({ user: req.userId })
+            .populate("restaurant")
+            .populate("user")
+        
+        res.json(orders)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(
+            { message: "Something went wrong"}
+        )
+    }
+}
+
 const createLineItems = (checkoutSessionRequest: CheckoutSessionRequest, menuItems: MenuItemType[]) => {
     const lineItems = checkoutSessionRequest.cartItems.map((cartItem) => {
         const menuItem = menuItems.find((item) => item._id.toString() === cartItem.menuItemId.toString())
@@ -163,5 +178,6 @@ const stripeWebhookHandler = async (req: Request, res: Response) => {
 
 export default {
     createCheckoutSession,
-    stripeWebhookHandler
+    stripeWebhookHandler,
+    getMyOrders
 }
